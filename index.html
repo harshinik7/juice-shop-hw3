@@ -1,117 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Juice Shop Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juice Shop Login - HW3 Part 2</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Styling to mimic OWASP Juice Shop login page */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background: #1a1a2e;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 20px;
     }
-    .card {
-      background: #16213e;
-      padding: 40px 36px;
-      border-radius: 8px;
-      width: 360px;
-      color: #e0e0e0;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    .login-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
     }
-    .card h2 { text-align: center; color: #f5a623; margin-bottom: 6px; }
-    .card p.subtitle { text-align: center; font-size: 13px; color: #888; margin-bottom: 24px; }
-    label { display: block; font-size: 13px; margin-bottom: 4px; color: #aaa; }
-    input[type="email"], input[type="password"] {
-      width: 100%; padding: 10px 12px; margin-bottom: 6px;
-      border: 1px solid #333; border-radius: 4px;
-      background: #0f3460; color: #fff; font-size: 14px;
-      outline: none; transition: border 0.2s;
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
     }
-    input:focus { border-color: #f5a623; }
-    .error { color: #e74c3c; font-size: 12px; margin-bottom: 10px; min-height: 16px; }
-    button[type="submit"] {
-      width: 100%; padding: 11px; background: #f5a623;
-      color: #1a1a2e; font-weight: bold; font-size: 15px;
-      border: none; border-radius: 4px; cursor: pointer;
-      margin-top: 8px; transition: background 0.2s;
+    .login-header h1 {
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 10px;
     }
-    button[type="submit"]:hover { background: #e0951a; }
-    .success { display: none; text-align: center; color: #2ecc71; margin-top: 14px; font-size: 14px; }
+    .login-header p {
+      color: #666;
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .error-message {
+      color: #e53e3e;
+      font-size: 12px;
+      margin-top: 5px;
+      min-height: 18px;
+      display: block;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-login:active {
+      transform: translateY(0);
+    }
+    .success-message {
+      background: #48bb78;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
+    .validation-info {
+      background: #edf2f7;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #4a5568;
+    }
+    .validation-info ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Juice Shop</h2>
-    <p class="subtitle">Please sign in to continue</p>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>🧃 Juice Shop</h1>
+      <p>Login to your account</p>
+    </div>
+
+    <!-- Validation requirements info -->
+    <div class="validation-info">
+      <strong>Requirements:</strong>
+      <ul>
+        <li>Email must contain "@"</li>
+        <li>Password must be at least 8 characters</li>
+      </ul>
+    </div>
+
+    <!-- Login Form -->
     <form id="loginForm" novalidate>
-      <label for="email">Email address</label>
-      <input type="email" id="email" placeholder="user@example.com" autocomplete="username" />
-      <div class="error" id="emailError"></div>
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Min. 8 characters" autocomplete="current-password" />
-      <div class="error" id="passwordError"></div>
-      <button type="submit">Login</button>
+      <!-- Email field -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="Enter your email"
+          autocomplete="email"
+        >
+        <span class="error-message" id="emailError"></span>
+      </div>
+
+      <!-- Password field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Enter your password"
+          autocomplete="current-password"
+        >
+        <span class="error-message" id="passwordError"></span>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-login">Login</button>
+
+      <!-- Success message (hidden by default) -->
+      <div class="success-message" id="successMessage">
+        ✓ Login successful! (Client-side validation passed)
+      </div>
     </form>
-    <div class="success" id="successMsg">Login successful!</div>
   </div>
 
   <script>
+    // ===== CLIENT-SIDE VALIDATION =====
+    
+    // Get form elements
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
-    const successMsg = document.getElementById('successMsg');
+    const successMessage = document.getElementById('successMessage');
 
-    // XSS prevention: encode HTML entities before any output
-    function sanitize(str) {
-      const div = document.createElement('div');
-      div.appendChild(document.createTextNode(str));
-      return div.innerHTML;
-    }
-
+    // Validation function: Check if email contains "@"
     function validateEmail(email) {
-      if (!email) return 'Email is required.';
-      if (!email.includes('@')) return 'Email must contain "@".';
-      const parts = email.split('@');
-      if (!parts[0] || !parts[1]) return 'Please enter a valid email address.';
-      return '';
+      // REQUIREMENT: Email must contain "@"
+      if (email.trim() === '') {
+        return 'Email is required';
+      }
+      if (!email.includes('@')) {
+        return 'Email must contain "@" symbol';
+      }
+      return ''; // Valid
     }
 
+    // Validation function: Check if password is at least 8 characters
     function validatePassword(password) {
-      if (!password) return 'Password is required.';
-      if (password.length < 8) return 'Password must be at least 8 characters.';
-      return '';
+      // REQUIREMENT: Password must be at least 8 characters long
+      if (password === '') {
+        return 'Password is required';
+      }
+      if (password.length < 8) {
+        return 'Password must be at least 8 characters long';
+      }
+      return ''; // Valid
     }
 
-    emailInput.addEventListener('blur', () => {
-      emailError.textContent = validateEmail(emailInput.value.trim());
+    // Real-time validation on input blur
+    emailInput.addEventListener('blur', function() {
+      const error = validateEmail(this.value);
+      emailError.textContent = error;
     });
 
-    passwordInput.addEventListener('blur', () => {
-      passwordError.textContent = validatePassword(passwordInput.value);
+    passwordInput.addEventListener('blur', function() {
+      const error = validatePassword(this.value);
+      passwordError.textContent = error;
     });
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      successMsg.style.display = 'none';
-      const email = emailInput.value.trim();
+    // Clear error messages on input focus
+    emailInput.addEventListener('focus', function() {
+      emailError.textContent = '';
+    });
+
+    passwordInput.addEventListener('focus', function() {
+      passwordError.textContent = '';
+    });
+
+    // Form submission handler
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent default form submission
+      
+      // Hide success message
+      successMessage.style.display = 'none';
+      
+      // Get input values
+      const email = emailInput.value;
       const password = passwordInput.value;
-      const eErr = validateEmail(email);
-      const pErr = validatePassword(password);
-      emailError.textContent = eErr;
-      passwordError.textContent = pErr;
-      if (eErr || pErr) return;
-      // Sanitize before any DOM use
-      const safeEmail = sanitize(email);
-      console.log('Login attempt for:', safeEmail);
-      // Server-side: POST /api/login with CSRF token, rate limiting, bcrypt comparison
-      successMsg.style.display = 'block';
+      
+      // Validate both fields
+      const emailValidationError = validateEmail(email);
+      const passwordValidationError = validatePassword(password);
+      
+      // Display errors if any
+      emailError.textContent = emailValidationError;
+      passwordError.textContent = passwordValidationError;
+      
+      // CLIENT-SIDE VALIDATION: Prevent submission if errors exist
+      if (emailValidationError || passwordValidationError) {
+        console.log('Form validation failed (client-side)');
+        return; // Stop submission
+      }
+      
+      // All validations passed
+      console.log('✓ Client-side validation passed');
+      console.log('Email:', email);
+      console.log('Password length:', password.length);
+      
+      // ===== SERVER-SIDE VALIDATION (Simulated) =====
+      // In a real application, this would send data to server:
+      // fetch('/api/login', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email, password })
+      // })
+      
+      // Simulate server-side validation
+      simulateServerValidation(email, password);
     });
+
+    // Simulated server-side validation function
+    function simulateServerValidation(email, password) {
+      console.log('--- Simulating Server-Side Validation ---');
+      
+      // Server would perform additional checks:
+      // 1. SQL Injection prevention (parameterized queries)
+      // 2. Password hashing verification (bcrypt)
+      // 3. Rate limiting
+      // 4. CSRF token validation
+      
+      // For demo purposes, show success message
+      successMessage.style.display = 'block';
+      
+      console.log('✓ Server-side validation passed (simulated)');
+      console.log('✓ Login successful!');
+      
+      // Clear form after 2 seconds
+      setTimeout(() => {
+        form.reset();
+        successMessage.style.display = 'none';
+      }, 2000);
+    }
   </script>
 </body>
 </html>
