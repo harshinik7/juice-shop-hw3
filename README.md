@@ -2,9 +2,6 @@
 
 ## OWASP Juice Shop HW3 - Secure Login Form
 
-**Course:** CSCE 477 / CSCE 703 | Texas A&M University | Spring 2026
-
----
 
 ## Overview
 
